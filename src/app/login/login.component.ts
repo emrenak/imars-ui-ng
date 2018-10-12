@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from '../login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'login',
@@ -11,14 +12,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent{ 
 
+  loggedIn: boolean;
+
   constructor(public loginService:LoginService, 
   	private route: ActivatedRoute, 
   	private router: Router) { }
 
   login(username, pwd):void {
-    this.loginService.login(username,pwd);
-    // then, navigate to profile page
-    
+    this.loginService.login(username,pwd).subscribe(data => {
+      console.log("Login succeeded");
+      this.router.navigate(['/dashboard']);
+     }, error => {
+       console.log("Invalid username or password");
+     }); ;
   }
 
   register():void {

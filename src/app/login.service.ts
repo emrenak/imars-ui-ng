@@ -19,13 +19,9 @@ export class LoginService {
   loginUrl:string;
   constructor(private http: HttpClient) { }
 
-  public login (username, password) : void {
+  public login (username, password){
   	 this.loginUrl = endpoint + "/login?email="+username+"&password="+password;
-     this.http.get(this.loginUrl).subscribe(data => {
-     	console.log("logging succeeded");
-     }, error => {
-     	console.log("Error occured: " + error);
-     });
+     return this.http.get(this.loginUrl);
   }
 
 }
