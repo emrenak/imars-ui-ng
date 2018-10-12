@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 
-const endpoint = 'http://localhost:8090/member/login?email=serefcemgenel@gmail.com&password=123456';
+const endpoint = 'http://localhost:8090/member';
 const httpOptions = {
      headers: new HttpHeaders({
     '  Content-Type':  'application/json'
@@ -15,31 +15,17 @@ const httpOptions = {
 })
 
 export class LoginService {
+
+  loginUrl:string;
   constructor(private http: HttpClient) { }
 
-  private extractData(res: Response) {
-   let body = res;
-   return body || { };
+  public login (username, password) : void {
+  	 this.loginUrl = endpoint + "/login?email="+username+"&password="+password;
+     this.http.get(this.loginUrl).subscribe(data => {
+     	console.log("logging succeeded");
+     }, error => {
+     	console.log("Error occured: " + error);
+     });
   }
 
-  public login () {
-     console.log("logging inside service");
-    // return this.http.get(endpoint).pipe(
-    // map(this.extractData));
-    // catchError(this.handleError<any>('login'));
-  }
-
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
-
-    // TODO: better job of transforming error for user consumption
-    console.log(`${operation} failed: ${error.message}`);
-
-    // Let the app keep running by returning an empty result.
-    return of(result as T);
-   };
- }
 }
